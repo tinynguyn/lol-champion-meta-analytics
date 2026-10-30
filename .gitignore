@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Database credentials
+.env
+.env.*
+!.env.example
+
+# Raw datasets
+data/*.csv

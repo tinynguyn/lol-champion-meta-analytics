@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS dim_champion (
+    champion_key INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    champion_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS dim_team (
+    team_key INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    team_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS  dim_role (
+    role_key INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    role_name VARCHAR(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS dim_date (
+    date_key INTEGER PRIMARY KEY,
+    full_date DATE NOT NULL UNIQUE,
+    day INTEGER,
+    week_of_year INTEGER,
+    month INTEGER,
+    year INTEGER
+);
+
+
+CREATE TABLE IF NOT EXISTS dim_tournament (
+    tournament_key INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    league VARCHAR(30) NOT NULL,
+    region VARCHAR(50) NOT NULL,
+    split VARCHAR(30) NOT NULL,
+    season_year INTEGER NOT NULL,
+
+    UNIQUE (league, split, season_year)
+);
+
