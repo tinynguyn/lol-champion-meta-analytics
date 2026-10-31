@@ -1,7 +1,25 @@
+
+WITH all_champions AS (
+    SELECT TRIM(champion) AS champion_name
+    FROM stg_match_data
+    WHERE league <> 'LCS.A'
+      AND champion IS NOT NULL
+
+    UNION
+
+    SELECT TRIM(b.champion) AS champion_name
+    FROM stg_match_data s
+    CROSS JOIN LATERAL (
+        VALUES (s.ban1), (s.ban2), (s.ban3), (s.ban4), (s.ban5)
+    ) AS b(champion)
+    WHERE s.league <> 'LCS.A'
+      AND s.position = 'team'
+      AND b.champion IS NOT NULL
+)
 INSERT INTO dim_champion (champion_name)
-SELECT DISTINCT champion
-FROM stg_match_data
-WHERE league <> 'LCS.A' AND champion IS NOT NULL
+SELECT champion_name
+FROM all_champions
+WHERE champion_name <> ''
 ON CONFLICT (champion_name) DO NOTHING;
 
 INSERT INTO dim_team (team_name)
@@ -16,7 +34,8 @@ VALUES
     ('jng'),
     ('mid'),
     ('bot'),
-    ('sup');
+    ('sup')
+ON CONFLICT (role_name) DO NOTHING;
 SELECT *
 FROM dim_role
 ORDER BY role_key;
