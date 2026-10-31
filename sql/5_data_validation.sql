@@ -44,3 +44,24 @@ SELECT 'Ban', gameid, champion_key, COUNT(*)
 FROM fact_champion_ban
 GROUP BY gameid, champion_key
 HAVING COUNT(*) > 1;
+
+
+SELECT
+    w.league,
+    w.champion_name,
+    SUM(w.total_picks) AS weekly_picks,
+    m.total_picks AS season_picks,
+    SUM(w.total_bans) AS weekly_bans,
+    m.total_bans AS season_bans
+FROM vw_champion_meta_weekly w
+JOIN vw_champion_meta m
+    ON w.league = m.league
+   AND w.champion_name = m.champion_name
+GROUP BY
+    w.league,
+    w.champion_name,
+    m.total_picks,
+    m.total_bans
+HAVING
+    SUM(w.total_picks) <> m.total_picks
+    OR SUM(w.total_bans) <> m.total_bans;
